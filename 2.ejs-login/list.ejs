@@ -10,21 +10,21 @@
     <a href = "/edit">회원가입 수정</a>&nbsp;&nbsp;
     <a href = "/delete">회원 탈퇴</a>&nbsp;&nbsp;
     <hr/>
-    < width="100%" border="1">
+    <table width="100%" border="1">
         <tr>
             <th>Username</th>
             <th>Email</th>
             <th>ID</th>
             <th>PASSWORD</th>
         </tr>
-        <% data.forEach(function(item,index){%></%>
-            <tr>
-                <td><%= item.username %></>%></td>
-                <td><%= item.email %></>%></td>
-                <td><%= item.id %></%></td>
-                <td><%= item.password %></%></td>
-            </tr>
-            <% }); %></%>
-    </table>
+        <% data.forEach(function (item, index){ %></%>
+    <tr>
+        <td><%= item.username %></%></td>
+        <td><%= item.email %></%></td>
+        <td><%= item.id %></%></td>
+        <td><%= item.password %></%></td>
+    </tr>
+    <% }); %></%>
+</table>
 </body>
 </html>

@@ -24,10 +24,8 @@ app.use(session({
 }))
 
 app.use(express.static('public'));
-app.use(passport.initialize());
-app.use(passport.session());
 
-mongoose.connect("mongodb://localhost/ejs-login-form", (err)=>{
+mongoose.connect("mongodb://localhost/ejs", (err)=>{
     if(err){
         console.log("DB Error")
         throw err
@@ -73,7 +71,7 @@ app.get('/', (req, res)=>{
     })
 })
 
-app.get('/',(req,res)=>{
+app.get('/login',(req,res)=>{
     fs.readFile('login.ejs', 'utf-8', (err, data)=>{
         res.send(data)
     })
@@ -105,6 +103,9 @@ app.post('/login', (req,res)=>{
             }
         }
         else{
+            console.log(result)
+            console.log(body.id)
+            console.log(body.password)
             console.log("로그인 실패")
             res.redirect('/')
         }
@@ -119,11 +120,12 @@ app.get('/insert', (req,res)=>{
 
 app.post('/insert', (req, res)=>{
     var body = req.body
+
     user = new User({
         username: body.username,
         email: body.email,
         id: body.id,
-        password: body,password
+        password: body.password
     })
 
     User.findOne({
@@ -218,7 +220,7 @@ app.post('/edit', (req,res)=>{
 
     user = new User({
         username: body.username,
-        emai: body.email,
+        email: body.email,
         id: body.id,
         password: body.password
     })
