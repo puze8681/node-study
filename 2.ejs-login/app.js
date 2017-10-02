@@ -159,7 +159,7 @@ app.get('/delete', (req,res)=>{
     })
 })
 
-app.post('delete', (req,res)=>{
+app.post('/delete', (req,res)=>{
     var body = req.body
 
     User.findOne({
@@ -180,7 +180,7 @@ app.post('delete', (req,res)=>{
                         else{
                             console.log('User '+result.username+' Delte Success!')
                             req.session.destroy(()=>{
-                                req.session()
+                                req.session
                             })
                             res.redirect('/')
                         }
@@ -205,7 +205,7 @@ app.get('/main', (req,res)=>{
 })
 
 app.get('/edit', (req,res)=>{
-    fs.readFile('/edit.ejs', 'utf-8', (err, data)=>{
+    fs.readFile('edit.ejs', 'utf-8', (err, data)=>{
         res.end(ejs.render(data, {
             username: req.session.username,
             email: req.session.email,
@@ -224,25 +224,20 @@ app.post('/edit', (req,res)=>{
         id: body.id,
         password: body.password
     })
-    User.remove({id: req.session.user_id}, err=>{
+    User.update({
+        id: req.session.user_id
+    }, {$set:{username:body.username,email:body.email,password:body.password}},(err)=>{
         if(err){
             console.log(err)
             throw err
         }
-        user.save(err=>{
-            if(err){
-                console.log("/edit save Error")
-                throw err
-            }
-            else{
-                console.log('Edit success')
-                req.session.username = body.username
-                req.session.user_id = body.id
-                req.session.email = body.email
-                req.session.password = body.password
-                res.redirect('/main')
-            }
-        })
+        else{
+            console.log('Update success')
+            req.session.username = body.username
+            req.session.email = body.email
+            req.session.password = body.password
+            res.redirect('/')
+        }
     })
 })
 
