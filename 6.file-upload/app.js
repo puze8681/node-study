@@ -1,43 +1,31 @@
 var exrpess = require('express')
 var bodyParser = require('body-parser')
-var mongoose = require('mongoose')
-var multer = require('multer');
+var multer = require('multer')
 var fs = require('fs')
-var app = express();
-var schema = mongoose.Schema;
-var stroage = multer.diskStorage({
-    destination: (req,file,cb)=>{
-        cb(null, '/home/harddisk/harddisk')
-    },
-    filename: (req,fidle,cb)=>{
-        cb(null, file.originalname)
-    }
-})
-var upload = multer({storage: storage})
+var app = express()
+var db = require('./mongo/database')
+
+app.use(express.static('views'));
+app.use(express.static('public'))
+app.use(exrpess.static('img'))
 
 app.use(bodyParser.urlencoded({
     extended: true
 }))
 
-app.use('/file', express.static('file'))
+require('./rotues/index')
+require('./routes/auth')
+require('./rotues/login')
+require('./rotues/edit')
+require('./rotues/profile')
 
-app.listen(3000, ()=>{
-    console.log('Server Running At 3000 Port!')
-})
+require('./mongo/database')(app, fs, db, multer)
 
-app.get('/', (req,res)=>{
-    fs.readFile('index.html', 'utf-8', (err,data)=>{
-        res.send(data)
-    })
-})
-
-app.get('/movieupload', (req,res)=>{
-    fs.readFile('movie.html', 'utf-8', (err,data)=>{
-        res.send(data)
-    })
-})
-
-app.post('/moviewupload', upload.single('file'), (req,res)=>{
-    console.log(req.file)
-    res.send('Success')
+app.listen(port, err=>{
+    if(err){
+        console.log('Server Start Error')
+    }
+    else{
+        console.log('Server Running At '+port+' Port!')
+    }
 })
